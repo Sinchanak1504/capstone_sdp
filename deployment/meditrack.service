@@ -19,11 +19,11 @@ After=network.target
 [Service]
 User=ubuntu
 Group=www-data
-WorkingDirectory=/home/ubuntu/MediTrack
-EnvironmentFile=/home/ubuntu/MediTrack/.env
-ExecStart=/home/ubuntu/MediTrack/venv/bin/gunicorn \
+WorkingDirectory=/home/ubuntu/capstone_sdp
+EnvironmentFile=/home/ubuntu/capstone_sdp/.env
+ExecStart=/home/ubuntu/capstone_sdp/venv/bin/gunicorn \
     --workers 3 \
-    --bind 127.0.0.1:8000 \
+    --bind 127.0.0.1:5000 \
     app:app
 Restart=always
 RestartSec=5
