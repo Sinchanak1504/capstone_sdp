@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Equipment · MediTrack{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1>Equipment</h1>
+      <p class="subtitle">{{ equipment|length }} record{{ '' if equipment|length == 1 else 's' }} shown</p>
+    </div>
+    <a href="{{ url_for('add_equipment') }}" class="btn btn-primary">+ Add Equipment</a>
+  </div>
+
+  <form method="get" class="filter-bar">
+    <div class="form-field">
+      <label for="department">Department</label>
+      <select name="department" id="department">
+        <option value="">All departments</option>
+        {% for dept in departments %}
+          <option value="{{ dept }}" {{ 'selected' if dept == selected_department }}>{{ dept }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="status">Status</label>
+      <select name="status" id="status">
+        <option value="">All statuses</option>
+        {% for s in statuses %}
+          <option value="{{ s }}" {{ 'selected' if s == selected_status }}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-field">
+      <label>&nbsp;</label>
+      <button type="submit" class="btn btn-secondary">Apply filters</button>
+    </div>
+    {% if selected_department or selected_status %}
+      <div class="form-field">
+        <label>&nbsp;</label>
+        <a href="{{ url_for('equipment_list') }}" class="btn btn-secondary">Clear</a>
+      </div>
+    {% endif %}
+  </form>
+
+  <div class="card">
+    {% if equipment %}
+      <table>
+        <thead>
+          <tr>
+            <th>Equipment</th>
+            <th>Serial No.</th>
+            <th>Department</th>
+            <th>Purchase Date</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in equipment %}
+            <tr>
+              <td><a href="{{ url_for('equipment_detail', equipment_id=item.equipment_id) }}">{{ item.equipment_name }}</a></td>
+              <td class="serial">{{ item.serial_number }}</td>
+              <td>{{ item.department }}</td>
+              <td>{{ item.purchase_date.strftime('%d %b %Y') }}</td>
+              <td>{{ macros.status_tag(item.status) }}</td>
+              <td><a href="{{ url_for('equipment_detail', equipment_id=item.equipment_id) }}">View →</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="empty-state">No equipment matches these filters yet.</p>
+    {% endif %}
+  </div>
+{% endblock %}

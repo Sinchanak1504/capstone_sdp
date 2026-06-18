@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}{{ equipment.equipment_name }} · MediTrack{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1>{{ equipment.equipment_name }}</h1>
+      <p class="subtitle">
+        <span class="serial">{{ equipment.serial_number }}</span>
+        · {{ equipment.department }}
+        · {{ macros.status_tag(equipment.status) }}
+      </p>
+    </div>
+    <div class="btn-row" style="margin-top:0;">
+      <a href="{{ url_for('edit_equipment', equipment_id=equipment.equipment_id) }}" class="btn btn-secondary">Edit / Update Status</a>
+      <a href="{{ url_for('add_maintenance', equipment_id=equipment.equipment_id) }}" class="btn btn-accent">+ Log Maintenance</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Asset Details</h2>
+    <table>
+      <tbody>
+        <tr><td class="muted" style="width:200px;">Purchase date</td><td>{{ equipment.purchase_date.strftime('%d %b %Y') }}</td></tr>
+        <tr><td class="muted">Department</td><td>{{ equipment.department }}</td></tr>
+        <tr><td class="muted">Status</td><td>{{ macros.status_tag(equipment.status) }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Maintenance History</h2>
+    {% if logs %}
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Technician</th>
+            <th>Issue Reported</th>
+            <th>Resolution</th>
+            <th>Next Due</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+            <tr>
+              <td>{{ log.maintenance_date.strftime('%d %b %Y') }}</td>
+              <td>{{ log.technician_name }}</td>
+              <td>{{ log.issue_reported or '—' }}</td>
+              <td>{{ log.resolution_notes or '—' }}</td>
+              <td>
+                {% if log.next_due_date %}
+                  <span class="{{ 'due-date' if log.next_due_date < today else 'serial' }}">
+                    {{ log.next_due_date.strftime('%d %b %Y') }}
+                  </span>
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="empty-state">No maintenance logged yet for this item.</p>
+    {% endif %}
+  </div>
+{% endblock %}

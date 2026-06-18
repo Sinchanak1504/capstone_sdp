@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Dashboard · MediTrack{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="subtitle">Fleet-wide status across all departments</p>
+    </div>
+    <a href="{{ url_for('add_equipment') }}" class="btn btn-primary">+ Add Equipment</a>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-tile">
+      <div class="stat-value">{{ total }}</div>
+      <div class="stat-label">Total Equipment</div>
+    </div>
+
+    {% for row in status_counts %}
+      <div class="stat-tile {{ 'is-active' if row.status == 'Active' else ('is-maintenance' if row.status == 'Under Maintenance' else '') }}">
+        <div class="stat-value">{{ row.count }}</div>
+        <div class="stat-label">{{ row.status }}</div>
+      </div>
+    {% endfor %}
+
+    <div class="stat-tile is-overdue">
+      <div class="stat-value">{{ overdue|length }}</div>
+      <div class="stat-label">Overdue Maintenance</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Overdue Maintenance</h2>
+    {% if overdue %}
+      {% for item in overdue %}
+        <div class="overdue-row">
+          <div>
+            <a href="{{ url_for('equipment_detail', equipment_id=item.equipment_id) }}">{{ item.equipment_name }}</a>
+            <span class="muted">— {{ item.department }}</span>
+            <span class="serial">{{ item.serial_number }}</span>
+          </div>
+          <div class="due-date">Due {{ item.next_due_date.strftime('%d %b %Y') }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="empty-state">No overdue maintenance right now. Every logged item is current.</p>
+    {% endif %}
+  </div>
+{% endblock %}

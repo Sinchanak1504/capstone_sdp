@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Log Maintenance · MediTrack{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1>Log Maintenance</h1>
+      <p class="subtitle">{{ equipment.equipment_name }} · <span class="serial">{{ equipment.serial_number }}</span></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <form method="post">
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="maintenance_date">Maintenance date</label>
+          <input type="date" id="maintenance_date" name="maintenance_date" required>
+        </div>
+
+        <div class="form-field">
+          <label for="technician_name">Technician name</label>
+          <input type="text" id="technician_name" name="technician_name" placeholder="e.g. R. Mehta" required>
+        </div>
+
+        <div class="form-field">
+          <label for="next_due_date">Next due date</label>
+          <input type="date" id="next_due_date" name="next_due_date">
+        </div>
+
+        <div class="form-field full">
+          <label for="issue_reported">Issue reported</label>
+          <textarea id="issue_reported" name="issue_reported" placeholder="What prompted this visit?"></textarea>
+        </div>
+
+        <div class="form-field full">
+          <label for="resolution_notes">Resolution notes</label>
+          <textarea id="resolution_notes" name="resolution_notes" placeholder="What was done to resolve it?"></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary">Save log entry</button>
+        <a href="{{ url_for('equipment_detail', equipment_id=equipment.equipment_id) }}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

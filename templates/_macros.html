@@ -1,0 +1,9 @@
+{% macro status_tag(status) -%}
+  {%- if status == 'Active' -%}
+    <span class="tag tag-active">{{ status }}</span>
+  {%- elif status == 'Under Maintenance' -%}
+    <span class="tag tag-maintenance">{{ status }}</span>
+  {%- else -%}
+    <span class="tag tag-decommissioned">{{ status }}</span>
+  {%- endif -%}
+{%- endmacro %}
